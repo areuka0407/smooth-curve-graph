@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>부드러운 곡선 그래프 예제</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="Graph.js"></script>
+    <script>
+        window.addEventListener("load", () => {
+            // 샘플 데이터 준비, key를 X축, value를 Y축으로 삼는다.
+            const data = [
+                {key: "A"},
+                {key: "B"},
+                {key: "C"},
+                {key: "D"},
+                {key: "E"},
+            ];
+            data.forEach(x => {
+                x.value = parseInt(Math.random() * -10000) + 5000;
+            });
+
+            // 그래프 그리기
+            const graph = new Graph("#curve", data);
+            graph.draw();
+
+
+            // 데이터 추가
+            document.querySelector("#insert-btn").addEventListener("click", () => {
+                const key = document.querySelector("#input-key").value;
+                const value = document.querySelector("#input-value").value;
+                
+                if(key.trim() === "") return alert("텍스트를 입력해 주세요!");
+                else if(value.trim() === "") return alert("값을 입력해 주세요!");
+
+                graph.data.push({key: key, value: parseInt(value)});
+                cancelAnimationFrame(graph.requestAnimation);
+                graph.init();
+                graph.draw();
+            });
+
+            // 무작위 생성
+            document.querySelector("#random-btn").addEventListener("click", () => {
+                graph.data = graph.data.map(x => {
+                    x.value = parseInt(Math.random() * -10000) + 5000;
+                    return x;
+                });
+                cancelAnimationFrame(graph.requestAnimation);
+                graph.init();
+                graph.draw();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="wrap">
+        <canvas id="curve" width="1000" height="600"></canvas>
+        <div class="form">
+            <div class="form-group">
+                <label for="input-key">텍스트</label>
+                <input type="text" id="input-key" required>
+            </div>
+            <div class="form-group">
+                <label for="input-value">값</label>
+                <input type="number" id="input-value" min="0">
+            </div>
+            <button id="insert-btn">추가하기</button>
+            <button id="random-btn">무작위 값 생성</button>
+        </div>
+    </div>
+    
+</body>
+</html>
